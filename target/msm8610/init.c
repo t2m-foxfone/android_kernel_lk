@@ -133,6 +133,8 @@ void target_sdc_init()
 	config.sdhc_base = mmc_sdhci_base[config.slot - 1];
 	config.pwrctl_base = mmc_pwrctl_base[config.slot - 1];
 	config.pwr_irq     = mmc_sdc_pwrctl_irq[config.slot - 1];
+    //leihui add this ,because the HW can not support eMMC HS400 mode ,can not supply 1p8v pull up
+    config.hs400_support = 0; 
 
 	if (!(dev = mmc_init(&config)))
 	{

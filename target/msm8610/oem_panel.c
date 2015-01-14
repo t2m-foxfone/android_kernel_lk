@@ -46,7 +46,8 @@
 #include "include/panel_hx8389b_qhd_video.h"
 #include "include/panel_otm8018b_fwvga_video.h"
 #include "include/panel_nt35590_720p_video.h"
-
+//leihui add
+#include "include/panel_tianma_tm040ydh65_ili9806c_wvga_video.h"
 /*---------------------------------------------------------------------------*/
 /* static panel selection variable                                           */
 /*---------------------------------------------------------------------------*/
@@ -57,6 +58,8 @@ HX8379A_WVGA_VIDEO_PANEL,
 OTM8018B_FWVGA_VIDEO_PANEL,
 NT35590_720P_VIDEO_PANEL,
 HX8389B_QHD_VIDEO_PANEL,
+//leihui add
+ILI9806C_WVGA_VIDEO_PANEL,
 };
 
 enum {
@@ -94,6 +97,23 @@ static bool init_panel_data(struct panel_struct *panelstruct,
 			struct mdss_dsi_phy_ctrl *phy_db)
 {
 	switch (panel_id) {
+	//leihui add begin
+	case ILI9806C_WVGA_VIDEO_PANEL:
+		panelstruct->paneldata    = &tianma_tm040ydh65_ili9806c_wvga_video_panel_data;
+		panelstruct->panelres     = &tianma_tm040ydh65_ili9806c_wvga_video_panel_res;
+		panelstruct->color        = &tianma_tm040ydh65_ili9806c_wvga_video_color;
+		panelstruct->videopanel   = &tianma_tm040ydh65_ili9806c_wvga_video_video_panel;
+		panelstruct->commandpanel = &tianma_tm040ydh65_ili9806c_wvga_video_command_panel;
+		panelstruct->state        = &tianma_tm040ydh65_ili9806c_wvga_video_state;
+		panelstruct->laneconfig   = &tianma_tm040ydh65_ili9806c_wvga_video_lane_config;
+		panelstruct->paneltiminginfo  	= &tianma_tm040ydh65_ili9806c_wvga_video_timing_info;
+		panelstruct->panelresetseq	= &tianma_tm040ydh65_ili9806c_wvga_video_reset_seq;
+		panelstruct->backlightinfo = &tianma_tm040ydh65_ili9806c_wvga_video_backlight;
+		pinfo->mipi.panel_cmds	  = tianma_tm040ydh65_ili9806c_wvga_video_on_command;
+		pinfo->mipi.num_of_panel_cmds	= TIANMA_TM040YDH65_ILI9806C_WVGA_VIDEO_ON_COMMAND;
+		memcpy(phy_db->timing, tianma_tm040ydh65_ili9806c_wvga_video_timings, TIMING_SIZE);
+		break;
+	//leihui add end
 	case TRULY_WVGA_CMD_PANEL:
 		panelstruct->paneldata    = &truly_wvga_cmd_panel_data;
 		panelstruct->panelres     = &truly_wvga_cmd_panel_res;
@@ -254,10 +274,11 @@ bool oem_panel_select(const char *panel_name, struct panel_struct *panelstruct,
 		}
 		break;
 	case HW_PLATFORM_MTP:
-		if (0 == platform_subtype)
-			panel_id = TRULY_WVGA_VIDEO_PANEL;
-		else
-			panel_id = NT35590_720P_VIDEO_PANEL;
+		panel_id = ILI9806C_WVGA_VIDEO_PANEL;
+		//if (0 == platform_subtype)
+		//	panel_id = TRULY_WVGA_VIDEO_PANEL;
+		//else
+		//	panel_id = NT35590_720P_VIDEO_PANEL;
 		break;
 
 	case HW_PLATFORM_SURF:
