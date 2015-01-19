@@ -67,6 +67,10 @@
 #include "devinfo.h"
 #include "board.h"
 #include "scm.h"
+/*weijin.wen@t2mobile.com add bootloader version info*/
+#define JRD_VERSION
+#include "version.inc"
+/*weijin.wen@t2mobile add bootloader version info*/
 
 extern  bool target_use_signed_kernel(void);
 extern void platform_uninit(void);
@@ -209,11 +213,23 @@ unsigned char *update_cmdline(const char * cmdline)
 	unsigned char *cmdline_final = NULL;
 	int pause_at_bootup = 0;
 	bool gpt_exists = partition_gpt_exists();
+/*weijin.wen@t2mobile add bootloader version info. start*/
+#ifdef JRD_VERSION
+	char appsboot_version_cmdline[40];
+#endif
+/*weijin.wen@t2mobile add bootloader version info. end*/
 
 	if (cmdline && cmdline[0]) {
 		cmdline_len = strlen(cmdline);
 		have_cmdline = 1;
 	}
+
+/*weijin.wen@t2mobile add bootloader version info. start*/
+#ifdef JRD_VERSION
+	sprintf(appsboot_version_cmdline, " androidboot.bootloader=%s",APPSBOOT_VER);
+	cmdline_len += strlen(appsboot_version_cmdline);
+#endif
+/*weijin.wen@t2mobile add bootloader version info. end*/
 	if (target_is_emmc_boot()) {
 		cmdline_len += strlen(emmc_cmdline);
 	}
@@ -297,6 +313,14 @@ unsigned char *update_cmdline(const char * cmdline)
 			src = cmdline;
 			while ((*dst++ = *src++));
 		}
+/*weijin.wen@t2mobile.com add bootloader version info. start*/
+#ifdef JRD_VERSION
+		src = appsboot_version_cmdline;
+		if(have_cmdline) --dst;
+		have_cmdline = 1;
+		while ((*dst++ = *src++));
+#endif
+/*weijin.wen@t2mobile.com add bootloader version info. end*/
 		if (target_is_emmc_boot()) {
 			src = emmc_cmdline;
 			if (have_cmdline) --dst;
