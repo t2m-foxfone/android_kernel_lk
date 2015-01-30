@@ -70,6 +70,9 @@ int target_backlight_ctrl(struct backlight *bl, uint8_t enable)
 			pm_pwm_enable(true);
 		}
 		pm8x41_config_output_mpp(&mpp);
+		//[FEATURE]-Add-BEGIN by T2M.LeiHui,30/1/2015,919545,MS will flash a white screen when press power key
+		mdelay(150);
+		//[FEATURE]-Add-END by T2M. LeiHui
 		pm8x41_enable_mpp(&mpp, MPP_ENABLE);
 	} else {
 		pm_pwm_enable(false);
