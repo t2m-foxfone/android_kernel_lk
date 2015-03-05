@@ -62,7 +62,7 @@ ifeq ($(SIGNED_KERNEL),1)
 endif
 
 ifeq ($(TARGET_BUILD_VARIANT),user)
-  CFLAGS += -DDISABLE_FASTBOOT_CMDS=1
+#  CFLAGS += -DDISABLE_FASTBOOT_CMDS=1
 endif
 
 # setup toolchain prefix
